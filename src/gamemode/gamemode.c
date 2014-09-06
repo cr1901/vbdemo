@@ -1,0 +1,9 @@
+#include <stddef.h> /* Any conforming C compiler will have this... */
+#include "gamemode.h"
+
+GAME_STATE curr_game_state;
+
+game_mode_main_sub_t mode_main_jump_table[] = {
+	NULL,
+	affine_demo_mainproc
+};

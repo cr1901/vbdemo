@@ -1,0 +1,6 @@
+gamemode_src = File('gamemode.c')
+gamemode_sub_src = [Dir('affine').File('mainproc.c'), \
+]
+
+all_src = Split([gamemode_src, gamemode_sub_src])
+Return('all_src')

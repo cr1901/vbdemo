@@ -1,0 +1,4 @@
+[submodule "external/libgccvb"]
+	path = external/libgccvb
+	url = git@github.com:cr1901/libgccvb.git
+	ignore = dirty
