@@ -4,6 +4,6 @@
 GAME_STATE curr_game_state;
 
 game_mode_main_sub_t mode_main_jump_table[] = {
-	NULL,
+	focus_screen_mainproc,
 	affine_demo_mainproc
 };

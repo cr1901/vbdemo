@@ -4,7 +4,7 @@ libgccvb_src = env.Glob('./libgccvb/*.c')
 libgccvb_obj = env.Object(libgccvb_src)
 libgccvb = env.Library('./libgccvb/libgccvb', libgccvb_obj)
 env.Append(LIBPATH = [Dir('./libgccvb/')])
-env.Append(LIBS = [libgccvb])
+env.Append(LIBS = ['libgccvb'])
 
 
 if 'external' in COMMAND_LINE_TARGETS:

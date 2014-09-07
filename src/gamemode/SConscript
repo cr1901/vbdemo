@@ -1,5 +1,6 @@
-gamemode_src = File('gamemode.c')
-gamemode_sub_src = [Dir('affine').File('mainproc.c'), \
+gamemode_src = Glob('*.c')
+gamemode_sub_src = [Glob('affine/*.c'), \
+	Glob('focus/*.c'), \
 ]
 
 all_src = Split([gamemode_src, gamemode_sub_src])

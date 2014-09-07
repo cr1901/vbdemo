@@ -21,7 +21,9 @@ typedef void (* game_mode_int_sub_t) ();
 extern game_mode_main_sub_t mode_main_jump_table[];
 extern GAME_STATE curr_game_state;
 
+void focus_screen_mainproc();
 void affine_demo_mainproc();
+
 //extern game_mode_int_sub_t mode_int_jump_table[];
 
 

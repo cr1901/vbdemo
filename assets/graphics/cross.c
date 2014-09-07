@@ -1,5 +1,4 @@
-#ifndef CROSS_H
-#define CROSS_H
+#include "graphics/cross.h"
 
 const char char_cross[] = {
 	0xC0, 0x03, 0xC0, 0x03, 0xC0, 0x03, 0xFF, 0xFF, \
@@ -26,5 +25,3 @@ const char cross_affine[] = {
 	0x00, 0x00, \
 	0x00, 0x00 \
 };
-#endif        /*  #ifndef CROSS_H  */
-

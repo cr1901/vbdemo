@@ -3,11 +3,15 @@ Import('env')
 vb_src = []
 
 #Get a list of all source files to compile
-main_src = Split('vbmain.c init.c mainloop.c')
+
+#Main game control
+main_src = Glob('*.c')
+
+#Game mode subdir and other
+assets_src = SConscript('assets/SConscript', exports=['env'])
 gamemode_src = SConscript('gamemode/SConscript')
 
-vb_src = main_src + gamemode_src
-
+vb_src = main_src + assets_src + gamemode_src
 #And then create the program! This permits easy division of source files!
 vb_elf = env.Program('vbdemo', vb_src)
 vb_bin = env.Objcopy('vbdemo', vb_elf)
