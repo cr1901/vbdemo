@@ -4,7 +4,7 @@
 #include "gamemode.h"
 
 
-int init_video();
+void init_video();
 void init_vb();
 void jump_to_reset(); /* No return */
 

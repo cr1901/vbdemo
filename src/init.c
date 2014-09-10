@@ -1,20 +1,22 @@
 #include "init.h"
 #include "gamemode.h" /* For idempotency... I do this a lot. */
+#include "intrupt/timeint.h"
 #include "libgccvb/libgccvb.h"
 
 GAME_MODE initial_game_mode;
 int init_just_occurred;
 
-/* Can this fail? */
-int init_video()
+static void setup_intvecs();
+
+void init_video()
 {
 	vbDisplayOn();
 	vbSetColTable();
-	return 0;
 }
 
 void init_vb()
 {
+	setup_intvecs();
 	init_video();
 	vbDisplayHide();
 	curr_game_state = SETUP; /* Really inelegant, but it'll do for now. */
@@ -25,4 +27,14 @@ void init_vb()
 void inline jump_to_reset()
 {
 	jump_addr((void *) 0xFFFFFFF0);
+}
+
+void setup_intvecs()
+{	
+	/* Set up interrupt vectors. In reality, this is ROM. These assignments 
+	are Undefined in ANSI (cannot convert fcn ptr to data "ptr")- nothing 
+	can be done about this. This code will need to be rewritten for 
+	compilation with VUCC. */
+	tim_vector = (u32)(timer_handler);
+	
 }
