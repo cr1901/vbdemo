@@ -30,7 +30,6 @@ for extra_path in ['GCCVB_DIR', 'RETROARCH_DIR']:
 		pass
 
 env['CCFLAGS'] = '-Wall -nodefaultlibs -mv810 -xc'
-#env['CPPPATH'] = ['#/include', '#/assets', '#/external']
 env['CPPPATH'] = ['#/include', '#/external']
 #env['LINKFLAGS'] = '-r' #Just use the compiler driver for now...
 env['PROGSUFFIX'] = '.elf'

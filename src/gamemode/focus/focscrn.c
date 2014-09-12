@@ -5,13 +5,17 @@
 #include "graphics/font_pc.h"
 
 #define ASCII_BIAS 0x30
+#define CENTER_X(_m) ((48 - _m) >> 1)
+#define CENTER_Y(_m) ((28 - _m) >> 1)
 
-static const char msg_warn[]="IMPORTANT: READ INSTRUCTION AND PRECAUTION BOOKLETS BEFORE OPERATING";
+static const char * msg_warn[]= {"IMPORTANT: READ INSTRUCTION", "AND PRECAUTION BOOKLETS", 
+"BEFORE OPERATING"};
 
 static void load_warning_scr();
 static void load_ipdfoc_scr();
 static void fade_and_wait();
 static void print_message(const char * message, short bg_no, short x_pos, short y_pos, short font_bias);
+//static void print_center_message(const char * message, short bg_no, short y_pos, unsigned short msg_len);
 
 /* The first thing that the user will see. */
 void focus_screen_mainproc()
@@ -46,15 +50,18 @@ void load_warning_scr()
 	WA[31].head = WRLD_ON;
 	WA[31].gx    = 0;
 	WA[31].gp    = 0; //No parallax for now.
-	WA[31].gy    = 0;
+	WA[31].gy    = CENTER_Y(5)*8;
+	
 	//WA[30].mx = 384/2;
 	//WA[30].my = 224/2;
-	WA[31].w = 383;
-	WA[31].h = 223;
+	WA[31].w = 384;
+	WA[31].h = (5*8 - 1);
 	WA[31].ovr = 0;
 	WA[31].param = 0;
 	
-	print_message(msg_warn, 0, 1, 1, 0);
+	print_message(msg_warn[0], 0, CENTER_X(27), 0, 0);
+	print_message(msg_warn[1], 0, CENTER_X(23), 2, 0);
+	print_message(msg_warn[2], 0, CENTER_X(16), 4, 0);
 	
 	
 }
@@ -99,11 +106,13 @@ void fade_and_wait()
 	vbFXFadeOut(3);
 }
 
+/* Limited to one segment... for now, anyway. */
+/* No support for newlines, autowrapping... yet. */
+/* Assumes: Display is off. */
 void print_message(const char * message, short bg_no, short x_pos, short y_pos, short font_bias)
 {
 	unsigned short count;
-	
-	short initial_tile_pos = (y_pos*224) + x_pos;
+	short initial_tile_pos = (y_pos*64) + x_pos;
 	
 	for(count = 0; message[count] != '\0'; count++)
 	{
@@ -113,3 +122,9 @@ void print_message(const char * message, short bg_no, short x_pos, short y_pos, 
 		(* ((short *) BGMap(bg_no) + initial_tile_pos + count)) = (short) (message[count] + font_bias);
 	}
 }
+
+/* void print_center_message(const char * message, short bg_no, short y_pos, unsigned short msg_len, short font_bias));
+{
+	short x_center = ((48 - msg_len) >> 1);
+	
+} */
