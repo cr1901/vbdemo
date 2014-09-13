@@ -3,6 +3,7 @@
 //#include "graphics/cross.h"
 #include "graphics/focscrn.h"
 #include "graphics/font_pc.h"
+#include "init.h"
 
 #define ASCII_BIAS 0x30
 #define CENTER_X(_m) ((48 - _m) >> 1)
@@ -34,7 +35,10 @@ void focus_screen_mainproc()
 	fade_and_wait();
 	//vbDisplayOn();
 	
-	for(;;);
+	//vbPadKeyDown();
+	//while(vbPadKeyDown() != K_BTNS);
+	
+	jump_to_reset();
 	
 	
 	
@@ -43,21 +47,23 @@ void focus_screen_mainproc()
 void load_warning_scr()
 {
 
-	//setmem((void*)BGMap(0), 0x00, 0x2000); /* Just use the zeroth char for all tiles */
-	//addmem((void*) BGMap(0), (void *) msg_warn, sizeof(msg_warn), 0xD0);
-	//addmem((void*) BGMap(0), (void *) msg_warn, sizeof(msg_warn), 0);
-	copymem((void *)0x78000, (void*)font_pc, 8192);
+	copymem((void *)0x78000, (void*)font_pc, 8192);	
+	/* Clear out any leftover characters from previous BG. */
+	setmem((void*)BGMap(0), 0, 0x2000);
+	
 	WA[31].head = WRLD_ON;
 	WA[31].gx    = 0;
 	WA[31].gp    = 0; //No parallax for now.
 	WA[31].gy    = CENTER_Y(5)*8;
-	
-	//WA[30].mx = 384/2;
-	//WA[30].my = 224/2;
+	WA[31].mx = 0;
+	WA[31].mp = 0;
+	WA[31].my = 0;
 	WA[31].w = 384;
 	WA[31].h = (5*8 - 1);
 	WA[31].ovr = 0;
 	WA[31].param = 0;
+	
+	WA[30].head = WRLD_END;
 	
 	print_message(msg_warn[0], 0, CENTER_X(27), 0, 0);
 	print_message(msg_warn[1], 0, CENTER_X(23), 2, 0);
@@ -74,11 +80,12 @@ void load_ipdfoc_scr()
 	/* Reload the worlds to point to the appropriate.
 	Screen. */
 	WA[31].head = WRLD_LON;
-	WA[31].gx    = 0;
-	WA[31].gp    = 0; //No parallax for now.
-	WA[31].gy    = 0;
-	//WA[30].mx = 384/2;
-	//WA[30].my = 224/2;
+	WA[31].gx = 0;
+	WA[31].gp = 0;
+	WA[31].gy = 0;
+	WA[31].mx = 0;
+	WA[31].mp = 0;
+	WA[31].my = 0;
 	WA[31].w = 383;
 	WA[31].h = 223;
 	WA[31].ovr = 0;
@@ -88,8 +95,9 @@ void load_ipdfoc_scr()
 	WA[30].gx    = 0;
 	WA[30].gp    = 0; //No parallax for now.
 	WA[30].gy    = 0;
-	//WA[30].mx = 384/2;
-	//WA[30].my = 224/2;
+	WA[30].mx = 0;
+	WA[30].mp = 0;
+	WA[30].my = 0;
 	WA[30].w = 383;
 	WA[30].h = 223;
 	WA[30].ovr = 0;

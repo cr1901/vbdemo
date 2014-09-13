@@ -6,24 +6,30 @@ vars.AddVariables( \
 	('CC', 'The Virtual Boy C compiler', 'v810-gcc'), \
 	('LINK', 'The Virtual Boy linker (defaults to compiler driver)', 'v810-gcc'), \
 	('OBJCOPY', 'The Virtual Boy object copier', 'v810-objcopy'), \
+	('PAD', 'The Virtual Boy padding tool', 'Pad_VB'), \
+	('FLASH', 'The Virtual Boy object copier', 'FlashBoy'), \
 	PathVariable('GCCVB_DIR', 'Path to GCCVB bin dir (if not on standard SCons paths)', None), \
 	PathVariable('RETROARCH_DIR', 'Path to RetroArch dir (if not on standard SCons paths)', None), \
 	#PathVariable('RETROARCH_DIR', 'Path to RetroArch VB core (if not on standard SCons paths)', \
 		#Dir('mednafen_vb_libretro'), PathVariable.PathAccept) #Error- hmmm... \
 	PathVariable('RETROARCH_CORE', 'Path to RetroArch VB core (if not on standard SCons paths)', \
-		File('mednafen_vb_libretro'), PathVariable.PathAccept) \
+		File('mednafen_vb_libretro'), PathVariable.PathAccept), \
+	PathVariable('PAD_DIR', 'Path to VB padding tool (if not on standard SCons paths)', None), \
+	PathVariable('FLASH_DIR', 'Path to VB flashing tool (if not on standard SCons paths)', None) \
 	)
 
 #env = Environment(tools = ['as', 'cc', 'link'], variables = vars)
 if os.name == 'nt':
-	env = Environment(tools = ['mingw', tool_add_objcopy], variables = vars)
+	env = Environment(tools = ['mingw', tool_add_objcopy, tool_add_padROM, \
+		tool_add_flashROM], variables = vars)
 else:
-	env = Environment(tools = ['gcc', tool_add_objcopy], variables = vars)
+	env = Environment(tools = ['gcc', tool_add_objcopy, tool_add_padROM, \
+		tool_add_flashROM], variables = vars)
 
 vars.Save('variables.cache', env)
 Help(vars.GenerateHelpText(env))
 
-for extra_path in ['GCCVB_DIR', 'RETROARCH_DIR']:
+for extra_path in ['GCCVB_DIR', 'RETROARCH_DIR', 'PAD_DIR', 'FLASH_DIR']:
 	try:
 		env.AppendENVPath('PATH', env[extra_path])
 	except KeyError:
@@ -41,5 +47,10 @@ ROMfile = SConscript('src/SConscript', exports = ['env']) #Just to pass it into 
 testROM = env.Command('testROM', ROMfile, \
 	Action([['retroarch', '${SOURCE.abspath}', '-L', '$RETROARCH_CORE']]), \
 	chdir = env['RETROARCH_DIR'])
+
+hwROM = env.PadROM(ROMfile)
+flashROM = env.FlashROM(hwROM)
+Alias('flashROM', flashROM)
+
 
 Default(ROMfile)
