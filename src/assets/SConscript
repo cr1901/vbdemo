@@ -3,17 +3,18 @@ Import('env')
 print "Converting binary assets into C/ASM..."
 
 #Look for the assets in the top-level assets directory! I may remove this
-env.VariantDir(Dir('.'), '#/assets')
+env.VariantDir(Dir('.'), '#/assets', duplicate=False)
 
-gfx_assets_orig = Glob('graphics/*.c') #Note that some of the original assets
+gfx_assets_orig = [Glob('graphics/*.c')] #Note that some of the original assets
 #ARE in C- not ALL assets need to be run through a conversion!
 #gfx_assets_c = #This reflects all generated assets (converted to C and ASM data if necessary).
-music_assets_orig = Glob('music/*.c')
+music_assets_orig = Glob('music/*')
 
 #print gfx_c_assets
 
-generated_assets = gfx_assets_orig + music_assets_orig
-assets = generated_assets
+orig_assets = gfx_assets_orig + music_assets_orig
+generated_assets = orig_assets #For now, assume C source files are assets
+#generated_assets = env.BuildAssets(orig_assets)
 
 if 'assets' in COMMAND_LINE_TARGETS:
 	print "If -c specified, will clean files generated from assets."
@@ -21,5 +22,5 @@ if 'assets' in COMMAND_LINE_TARGETS:
 else:
 	env.NoClean([generated_assets]) #Don't clean the final library output/object files.
 
-Return('assets')
+Return('generated_assets')
 
