@@ -14,15 +14,9 @@ string returned by callable object (or obtained from the dictionary) is
 untouched and must append its own '.' to the beginning if one 
 is desired."""	
 def tool_add_padROM(env):
-	padROM_bld = Builder(action = '$PAD $SOURCE 0 21 $TARGET', suffix='.vb', \
-		src_suffix = '.vb', emitter=pad_suffix)
+	padROM_bld = Builder(action = '$PAD $SOURCE 0 21 $TARGET', \
+		suffix={None: '_pad.vb'}, src_suffix = '.vb')
 	env.Append(BUILDERS = {'PadROM' : padROM_bld})
-
-#The padder will require an emitter to change the default target output name.
-def pad_suffix(target, source, env):
-	filename, ext = os.path.splitext(str(target[0]))
-	target = [filename + '_pad' + ext]
-	return target, source	
 	
 def tool_add_flashROM(env):
 	flashROM_bld = Builder(action = '$FLASH $SOURCE', src_suffix = '.vb')
@@ -30,33 +24,19 @@ def tool_add_flashROM(env):
 	
 def tool_add_buildassets(env):
 	buildasset_bld = Builder(generator = decide_asset_builder, \
-		src_suffix = ['.c', '.asm'], suffix={'.c' : '.c'}, \
-		emitter=remove_c_asm_files, single_source=True)
+		src_suffix = ['.c', '.asm'], prefix='g', suffix='.c', \
+		single_source=True)
 	env.Append(BUILDERS = {'BuildAssets' : buildasset_bld})
-	
-def remove_c_asm_files(target, source, env):
-	source = [src for src in source if not is_src_file(str(src))]
-	for src in source:
-		print str(src)
-	return target, source
-		
-def is_src_file(fn):
-	filename, ext = os.path.splitext(fn)
-	if ext == '.c':
-		return True
-	elif ext == '.asm':
-		return True
-	else:
-		return False
 			
-			
+def noop(target = None, source = None, env = None):
+	return 0
 	
 	
 	
 def decide_asset_builder(source, target, env, for_signature):
-	#filename, ext = os.path.splitext(str(source[0]))
-	#if ext == '.c':
-	return Copy(target, source)
+	filename, ext = os.path.splitext(str(source[0]))
+	if ext == '.c':
+		return Copy(target[0], source[0])
 
 #def pybin2C(source, target, env):
 #	with open(source) as binfile:
