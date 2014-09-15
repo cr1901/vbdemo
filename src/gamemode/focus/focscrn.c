@@ -75,8 +75,11 @@ void load_warning_scr()
 void load_ipdfoc_scr()
 {
 	/* Load focus screen tiles into memory. */
-	copymem((void *)0x78000, (void*)cgx_sample, 8192*2);
-	copymem((void*)BGMap(0), (void*)scr_ipd_foc, 4096*2);
+	/* copymem((void *)0x78000, (void*)cgx_sample, 8192*2);
+	copymem((void*)BGMap(0), (void*)scr_ipd_foc, 4096*2); */
+	copymem((void *)0x78000, (void*)char_cfoc, 8192*2);
+	copymem((void*)BGMap(0), (void*)bg_vblogo, 4096*2);
+	
 	/* Reload the worlds to point to the appropriate.
 	Screen. */
 	WA[31].head = WRLD_LON;
