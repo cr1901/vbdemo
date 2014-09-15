@@ -1,8 +1,8 @@
 
 #include "libgccvb/libgccvb.h"
 //#include "graphics/cross.h"
-#include "graphics/focscrn.h"
-#include "graphics/font_pc.h"
+#include "assets/graphics/focscrn.h"
+#include "assets/graphics/font_pc.h"
 #include "gamectl.h"
 
 #define ASCII_BIAS 0x30

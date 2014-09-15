@@ -1,7 +1,7 @@
 #include "gamectl.h"
 
 #include "libgccvb/libgccvb.h"
-#include "graphics/cross.h"
+#include "assets/graphics/cross.h"
 
 static void setup_affine_demo();
 static void waste_cycles();

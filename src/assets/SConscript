@@ -8,7 +8,7 @@ env.VariantDir(Dir('.'), '#/assets', duplicate=False)
 gfx_assets_orig = Glob('graphics/[!g]*.c') #The 'g' prefix indicates GENERATED C files.
 #gfx_assets_orig = Glob('graphics/[!g]*.*[!~]') #Note that some of the original assets
 #ARE in C- not ALL assets need to be run through a conversion!
-music_assets_orig = Glob('music/*')
+music_assets_orig = Glob('music/[!g]*.c')
 
 orig_assets = gfx_assets_orig + music_assets_orig
 generated_assets = env.BuildAssets(orig_assets)
