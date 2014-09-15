@@ -1,6 +1,4 @@
-#include "init.h"
-#include "mainloop.h"
-#include "gamemode.h"
+#include "gamectl.h"
 
 void main_loop()
 {

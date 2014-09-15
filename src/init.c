@@ -1,5 +1,4 @@
-#include "init.h"
-#include "gamemode.h" /* For idempotency... I do this a lot. */
+#include "gamectl.h"
 #include "intrupt/timeint.h"
 #include "libgccvb/libgccvb.h"
 

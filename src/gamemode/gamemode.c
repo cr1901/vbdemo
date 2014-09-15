@@ -1,5 +1,5 @@
 #include <stddef.h> /* Any conforming C compiler will have this... */
-#include "gamemode.h"
+#include "gamectl.h"
 
 GAME_STATE curr_game_state;
 

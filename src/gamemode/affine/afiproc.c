@@ -1,4 +1,4 @@
-#include "gamemode.h"
+#include "gamectl.h"
 
 #include "libgccvb/libgccvb.h"
 #include "graphics/cross.h"

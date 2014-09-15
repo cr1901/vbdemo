@@ -3,7 +3,7 @@
 //#include "graphics/cross.h"
 #include "graphics/focscrn.h"
 #include "graphics/font_pc.h"
-#include "init.h"
+#include "gamectl.h"
 
 #define ASCII_BIAS 0x30
 #define CENTER_X(_m) ((48 - _m) >> 1)
@@ -82,19 +82,19 @@ void load_ipdfoc_scr()
 	
 	/* Reload the worlds to point to the appropriate.
 	Screen. */
-	WA[31].head = WRLD_LON;
+	WA[31].head = WRLD_ON;
 	WA[31].gx = 0;
-	WA[31].gp = 0;
+	WA[31].gp = 1;
 	WA[31].gy = 0;
 	WA[31].mx = 0;
-	WA[31].mp = 0;
+	WA[31].mp = 1;
 	WA[31].my = 0;
 	WA[31].w = 383;
 	WA[31].h = 223;
 	WA[31].ovr = 0;
 	WA[31].param = 0;
 	
-	WA[30].head = WRLD_RON;
+	/* WA[30].head = WRLD_RON;
 	WA[30].gx    = 0;
 	WA[30].gp    = 0; //No parallax for now.
 	WA[30].gy    = 0;
@@ -104,9 +104,9 @@ void load_ipdfoc_scr()
 	WA[30].w = 383;
 	WA[30].h = 223;
 	WA[30].ovr = 0;
-	WA[30].param = 0;
+	WA[30].param = 0; */
 	
-	WA[29].head = WRLD_END;
+	WA[30].head = WRLD_END;
 	
 }
 

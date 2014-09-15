@@ -1,5 +1,4 @@
-#include "init.h"
-#include "mainloop.h"
+#include "gamectl.h"
 
 /* There's not much here... */
 
