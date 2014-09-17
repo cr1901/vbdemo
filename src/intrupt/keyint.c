@@ -2,7 +2,7 @@
 
 #include "intrupt/handlers.h"
 
-void timer_handler()
+void key_handler()
 {
 	
 }
