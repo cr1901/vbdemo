@@ -1,6 +1,7 @@
 gamemode_src = Glob('*.c')
 gamemode_sub_src = [Glob('affine/*.c'), \
 	Glob('focus/*.c'), \
+	Glob('triangle/*.c')
 ]
 
 all_src = Split([gamemode_src, gamemode_sub_src])

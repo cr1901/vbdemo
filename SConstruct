@@ -8,6 +8,8 @@ vars.AddVariables( \
 	('OBJCOPY', 'The Virtual Boy object copier', 'v810-objcopy'), \
 	('PAD', 'The Virtual Boy padding tool', 'Pad_VB'), \
 	('FLASH', 'The Virtual Boy object copier', 'FlashBoy'), \
+	('START_MODE', 'Game Mode in which to start. Do not use.', 'FOCUS_SCREEN'), \
+	('TEST_TARGET', 'Used to choose a test program to analyze. Do not use.', None), \
 	BoolVariable('VUCC_COMPAT', 'Set to generate a batch file which can be used with Virtual Utopia C Compiler (Nonfunctional!)', False), \
 	PathVariable('GCCVB_DIR', 'Path to GCCVB bin dir (if not on standard SCons paths)', None), \
 	PathVariable('RETROARCH_DIR', 'Path to RetroArch dir (if not on standard SCons paths)', None), \
@@ -38,7 +40,7 @@ for extra_path in ['GCCVB_DIR', 'RETROARCH_DIR', 'PAD_DIR', 'FLASH_DIR']:
 	
 if env['VUCC_COMPAT']:
 	env.Append(CPPDEFINES='USING_VUCC')
-	SetOption('no_exec', True)	
+	SetOption('no_exec', True)
 
 env['CCFLAGS'] = '-Wall -nodefaultlibs -mv810 -xc'
 env['CPPPATH'] = ['#/include', '#/external']
@@ -48,6 +50,8 @@ env['PROGSUFFIX'] = '.elf'
 SConscript('external/SConscript', exports = ['env'])
 Import('env') #We need to get the exported environment back...
 ROMfile = SConscript('src/SConscript', exports = ['env']) #Just to pass it into something else!
+#testfiles = SConscript('tests/SConscript', exports = ['env'])
+
 
 testROM = env.Command('testROM', ROMfile, \
 	Action([['retroarch', '${SOURCE.abspath}', '-L', '$RETROARCH_CORE']]), \

@@ -4,7 +4,8 @@
 typedef enum game_mode
 {
 	FOCUS_SCREEN,
-	AFFINE_DEMO
+	AFFINE_DEMO,
+	TRI_DEMO
 }GAME_MODE;
 
 typedef enum game_state
@@ -33,6 +34,7 @@ disturb as little workRAM as possible on reset. */
 
 void focus_screen_mainproc();
 void affine_demo_mainproc();
+void triangle_mainproc();
 
 //extern game_mode_int_sub_t mode_int_jump_table[];
 

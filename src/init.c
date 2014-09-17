@@ -19,6 +19,8 @@ void init_vb()
 	init_video();
 	vbDisplayHide();
 	curr_game_state = SETUP; /* Really inelegant, but it'll do for now. */
+	/* initial_game_mode = INITIAL_GAME_MODE; */
+	//initial_game_mode = TRI_DEMO;
 	initial_game_mode = FOCUS_SCREEN;
 	init_just_occurred = 1;	
 }

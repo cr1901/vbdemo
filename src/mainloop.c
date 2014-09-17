@@ -9,6 +9,7 @@ void main_loop()
 	if(init_just_occurred)
 	{
 		curr_game_mode = initial_game_mode;
+		init_just_occurred = 0;
 	}
 	
 	for(;;)
