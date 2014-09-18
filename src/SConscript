@@ -4,7 +4,7 @@ Import('env')
 #Start with current directory.
 vb_src = Glob('*.c')
 
-src_subdirs = 'assets gamemode intrupt'
+src_subdirs = 'assets gamemode'
 
 #Subdirectory scripts to run. Each will return a list of source files to compile.
 for subdir in Split(src_subdirs):

@@ -1,2 +1,0 @@
-int_src = Glob('*.c')
-Return('int_src')

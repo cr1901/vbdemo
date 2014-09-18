@@ -1,5 +1,3 @@
-#ifndef _FONT_
-#define _FONT_
 /* Taken from PlanetVB: http://www.planetvb.com/modules/newbb/viewtopic.php?topic_id=3529&forum=9 */
 
 const unsigned char font_pc[] = {
@@ -516,4 +514,3 @@ const unsigned char font_pc[] = {
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,	/*Char255*/
 };
-#endif
