@@ -24,6 +24,7 @@ void init_vb()
 void inline jump_to_reset()
 {
 	INT_DISABLE;
+	stop_timer_driver();
 	jump_addr((void *) 0xFFFFFFF0);
 }
 

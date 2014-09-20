@@ -13,3 +13,8 @@ void init_timer_driver()
 	init_timer_hw();
 }
 
+void stop_timer_driver()
+{
+	stop_timer_and_int();
+}
+

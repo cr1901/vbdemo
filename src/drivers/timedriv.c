@@ -43,3 +43,9 @@ void init_timer_hw()
 	HW_REGS[TLR] = TIME_MS(10);
 	HW_REGS[TCR] = 	TIMER_100US | TIMER_INT | TIMER_ENB;
 }
+
+void stop_timer_and_int()
+{
+	HW_REGS[TCR] &= ~(TIMER_ENB | TIMER_INT);
+	
+}

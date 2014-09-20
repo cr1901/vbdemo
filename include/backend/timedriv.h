@@ -25,6 +25,7 @@ COMPARATOR * add_timer_to_pool(unsigned char target_ticks);
 int remove_timer_from_pool(COMPARATOR *);
 void bind_tim_vector();
 void init_timer_hw();
+void stop_timer_and_int();
 
 extern unsigned long tim_vector; /* Embedded in libgccvb's runtime. */
 
