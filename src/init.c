@@ -1,4 +1,5 @@
 #include "gamectl.h"
+#include "intrface/timerif.h"
 #include "libgccvb/libgccvb.h"
 
 GAME_MODE initial_game_mode;
@@ -13,6 +14,7 @@ void init_video()
 void init_vb()
 {
 	init_video();
+	init_timer_driver();
 	vbDisplayHide();
 	curr_game_state = SETUP; /* Really inelegant, but it'll do for now. */
 	initial_game_mode = FOCUS_SCREEN;
@@ -21,6 +23,7 @@ void init_vb()
 
 void inline jump_to_reset()
 {
+	INT_DISABLE;
 	jump_addr((void *) 0xFFFFFFF0);
 }
 

@@ -1,4 +1,5 @@
 import os.path
+import vb_py
 
 def tool_add_objcopy(env):
 	objcopy_bld = Builder(action = '$OBJCOPY $OBJCOPYFLAGS $SOURCE $TARGET', \

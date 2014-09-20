@@ -16,6 +16,8 @@ static void load_warning_scr();
 static void load_ipdfoc_scr();
 static void fade_and_wait();
 static void print_message(const char * message, short bg_no, short x_pos, short y_pos, short font_bias);
+
+extern unsigned char precise_timer_int_cnt;
 //static void print_center_message(const char * message, short bg_no, short y_pos, unsigned short msg_len);
 
 /* The first thing that the user will see. */
@@ -112,9 +114,14 @@ void load_ipdfoc_scr()
 
 void fade_and_wait()
 {
-	vbFXFadeIn(3);
-	while(!vbPadKeyDown());
-	vbFXFadeOut(3);
+	//vbFXFadeIn(3);
+	vbDisplayShow();
+	while(!vbPadKeyDown())
+	{
+		(* (short *)(BGMap(0) + 27)) = (short) precise_timer_int_cnt;
+	}
+	vbDisplayHide();
+	//vbFXFadeOut(3);
 }
 
 /* Limited to one segment... for now, anyway. */

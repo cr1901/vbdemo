@@ -1,0 +1,2 @@
+drivers_src = [Glob('*.c'), Glob('*.asm')]
+Return('drivers_src')
