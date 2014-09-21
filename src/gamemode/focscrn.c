@@ -3,7 +3,9 @@
 //#include "graphics/cross.h"
 #include "assets/graphics/focscrn.h"
 #include "assets/graphics/font_pc.h"
+
 #include "gamectl.h"
+#include "intrface/timerif.h"
 
 #define ASCII_BIAS 0x30
 #define CENTER_X(_m) ((48 - _m) >> 1)
@@ -17,13 +19,18 @@ static void load_ipdfoc_scr();
 static void fade_and_wait();
 static void print_message(const char * message, short bg_no, short x_pos, short y_pos, short font_bias);
 
+static void set_true(volatile void *);
+
 extern unsigned char precise_timer_int_cnt;
 //static void print_center_message(const char * message, short bg_no, short y_pos, unsigned short msg_len);
 
 /* The first thing that the user will see. */
 void focus_screen_mainproc()
 {
-	
+	timer_handle_t wait_timer;
+	volatile int two_seconds_passed = 0; /* I wonder if this is undefined 
+	behavior... as long as the variable doesn't go out of scope while the 
+	timer's in effect, I should be okay... */
 	
 	
 	//setmem((void*)BGMap(0), 0x00, 0x2000); /* Just use the zeroth char for all tiles */
@@ -32,7 +39,14 @@ void focus_screen_mainproc()
 	/* Give time for mirrors to adjust... */
 	
 	load_warning_scr();
-	fade_and_wait();
+	vbDisplayShow();
+	
+	/* Failure of this function is grounds for halting the program! */
+	wait_timer = request_timer(200, set_true, &two_seconds_passed);
+	while(!(two_seconds_passed && vbPadKeyDown()));
+	vbDisplayHide();
+	remove_timer(wait_timer);
+	
 	load_ipdfoc_scr();
 	fade_and_wait();
 	//vbDisplayOn();
@@ -116,17 +130,23 @@ void fade_and_wait()
 {
 	//vbFXFadeIn(3);
 	vbDisplayShow();
-	while(!vbPadKeyDown())
-	{
-		(* (short *)(BGMap(0) + 27)) = (short) precise_timer_int_cnt;
-	}
+	while(!vbPadKeyDown());
 	vbDisplayHide();
 	//vbFXFadeOut(3);
 }
 
+void set_true(volatile void * flag)
+{
+	(* (volatile int *) flag) = 1;
+}
+
+
+
 /* Limited to one segment... for now, anyway. */
 /* No support for newlines, autowrapping... yet. */
 /* Assumes: Display is off. */
+
+/* Todo: turn into a text-box routine. */
 void print_message(const char * message, short bg_no, short x_pos, short y_pos, short font_bias)
 {
 	unsigned short count;

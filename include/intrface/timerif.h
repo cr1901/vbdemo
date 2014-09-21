@@ -1,10 +1,10 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef TIMERIF_H
+#define TIMERIF_H
 
-typedef void * timer_handle_t;
+typedef int timer_handle_t;
 typedef void * tick_count_t;
 
-timer_handle_t request_timer(short centiseconds);
+timer_handle_t request_timer(short centiseconds,  void (*)(volatile void *), volatile void *);
 int timer_expired(timer_handle_t t_ptr);
 timer_handle_t restart_timer(timer_handle_t t_ptr);
 void remove_timer(timer_handle_t t_ptr);
@@ -15,5 +15,5 @@ void stop_timer_driver();
 short difftick(tick_count_t end, tick_count_t begin); */
 
 
-#endif        /*  #ifndef TIMER_H  */
+#endif        /*  #ifndef TIMERIF_H  */
 
