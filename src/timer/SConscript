@@ -1,0 +1,2 @@
+timer_src = Glob('*.c')
+Return('timer_src')

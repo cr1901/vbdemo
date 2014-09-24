@@ -4,12 +4,10 @@ Import('env')
 #Start with current directory.
 vb_src = Glob('*.c')
 
-src_subdirs = 'assets drivers gamemode sound'
+src_subdirs = 'assets drivers gamemode keypad mainctl sound timer video'
 
 #Subdirectory scripts to run. Each will return a list of source files to compile.
 for subdir in Split(src_subdirs):
-	#Deletes the assets SConscript! How convenient /s.
-	#vb_src = vb_src + SConscript(Dir('assets').File('SConscript'), exports=['env'])
 	vb_src = vb_src + SConscript(Dir(subdir).File('SConscript'), exports=['env'])
 
 #And then create the program! This permits easy division of source files!
