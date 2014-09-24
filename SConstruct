@@ -42,6 +42,7 @@ if env['VUCC_COMPAT']:
 	env.Append(CPPDEFINES='USING_VUCC')
 	SetOption('no_exec', True)
 
+#env['CCFLAGS'] = '-Wall -pedantic -nodefaultlibs -mv810 -xc'
 env['CCFLAGS'] = '-Wall -nodefaultlibs -mv810 -xc'
 env['CPPPATH'] = ['#/include', '#/external']
 #env['LINKFLAGS'] = '-r' #Just use the compiler driver for now...

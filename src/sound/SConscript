@@ -1,0 +1,2 @@
+snd_src = Glob('*.c')
+Return('snd_src')

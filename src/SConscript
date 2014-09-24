@@ -4,7 +4,7 @@ Import('env')
 #Start with current directory.
 vb_src = Glob('*.c')
 
-src_subdirs = 'assets drivers gamemode'
+src_subdirs = 'assets drivers gamemode sound'
 
 #Subdirectory scripts to run. Each will return a list of source files to compile.
 for subdir in Split(src_subdirs):
