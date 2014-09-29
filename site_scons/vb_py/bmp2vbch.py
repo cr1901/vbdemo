@@ -3,6 +3,7 @@ import os.path
 import struct
 
 import bmpreader
+import palettetools as pt
 import vbgfx
 import carray
 
@@ -21,10 +22,23 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 	else:
 		outchar_path, outchar_filename = os.path.split(charfile)
 	
-	global_palette_dict = {'\x00\x00\x00' : 0, '\x80\x00\x00' : 1, '\xC0\x00\x00' : 2, '\xFF\x00\x00' : 3}
+	#global_palette_dict = ['\x00\x00\x00' : 0, '\x80\x00\x00' : 1, '\xC0\x00\x00' : 2, '\xFF\x00\x00' : 3}
 	
-	vb_scene = vbgfx.VBScene(global_palette_dict)
+	#vb_scene = vbgfx.VBScene(global_palette_dict)
 	carray_writer = carray.ArrayWriter()
+	global_palette = pt.PaletteTable('\x00\x00\x00\x80\x00\x00\xC0\x00\x00\xFF\x00\x00')
+	print global_palette
+	
+	#my_dict = {}
+	#palent1 = bmpreader.PaletteEntry('\x00\x00\x00')
+	#palent2 = bmpreader.PaletteEntry('\x00\x00\x00')
+	#palent3 = bmpreader.PaletteEntry('\x80\x00\x00')
+	#print set([palent1]) <= set([palent2, palent3]) 
+	#my_dict[palent1] = 0
+	
+	#print my_dict[palent1]
+	#print my_dict[palent2]
+	#exit()
 	
 	
 	#pallete_indices = []
@@ -38,12 +52,15 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 	
 	for bmpfile in bmp_in:
 		bmp_list.append(bmpreader.Bitmap(bmpfile))
+		
+	exit()
 	
 	#Must specify at least the minimum number of colors to fill a single
 	#palette table. This data will be preserved verbatim.
 	#Other palettes can be omitted/hueristically generated from the "master palette".
-	for bmpimg in bmp_list:
-		palimg_list.append(bmpimg.to_palette(global_palette_dict))
+	
+	#for bmpimg in bmp_list:
+	#	palimg_list.append(bmpimg.to_palette(global_palette_dict))
 		
 	for palimg in palimg_list:
 		tileimg_list.append(bmpreader.TileImage(palimg, 8, 8))

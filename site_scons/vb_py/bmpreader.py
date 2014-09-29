@@ -2,6 +2,8 @@ import struct
 import string
 import math
 
+import palettetools as pt
+
 class BMPException(Exception):
 	def __init__(self, msg):
 		self.msg = msg
@@ -13,86 +15,6 @@ class TileImageException(Exception):
 		self.msg = msg
 	def __str__(self):
 		return self.img
-
-class PaletteEntry:
-	def __init__(self, R=0, G=0, B=0):
-		self.r = R
-		self.g = G
-		self.b = B
-		
-	def __init__(self, RawString):
-		pass
-		
-		
-	#def __eq__
-
-#Limitations: No alpha channel
-#Palette entries must be unique (mainly due to using a dictionary).
-class Palette:
-	def __init__(self, RawString, InitialDict = None, swap_raw_order=False):
-		if InitialDict is not None:
-			self.rgb_index = InitialDict
-			self.rgb_value = sorted(self.rgb_index.iterkeys(), key=lambda k: self.rgb_index[k])
-			self.num_entries = len(InitialDict)
-		else:
-			self.rgb_index = dict()
-			self.rgb_value = []
-			self.num_entries = 0
-			
-			
-		#struct.Struct('>3B'
-		
-		for palette_entry in self.next_entry(RawString, 3):
-			if len(palette_entry) != 3:
-				raise ValueError
-			
-			#Palette expects RGB... Bitmap outputs BGR
-			if swap_raw_order:
-				palette_entry = palette_entry[::-1]
-				
-			#palette_tuple = 
-				
-			if self.rgb_index.get(palette_entry) is None:
-				self.rgb_index[palette_entry] = self.num_entries
-				self.rgb_value.append(palette_entry)
-				self.num_entries = self.num_entries + 1
-				
-	def __str__(self):
-		print_str = ''
-		for index, entry in enumerate(self.rgb_value):
-			print_str = print_str + str(index) + ': ' + str(struct.unpack('>3B', entry)) + ', '
-		return print_str
-	
-	def next_entry(self, data, n_bytes):
-		for pos in xrange(0, len(data), n_bytes):
-			yield data[pos:pos + n_bytes]
-			
-class Tile:
-	def __init__(self, IndexData, XSize, YSize, Xpos, Ypos, RowWidth):
-		self.data = []
-		self.x_size = XSize
-		self.y_size = YSize
-		self.x_pos = Xpos
-		self.y_pos = Ypos
-		for v_offset in range(self.y_size):
-			start_index = RowWidth*(self.y_size*self.y_pos + v_offset) + \
-				self.x_size*self.x_pos
-			stop_index = start_index + self.x_size
-			#print (start_index, stop_index)
-			self.data = self.data + IndexData[start_index:stop_index]
-		#print self.data
-			
-	def __str__(self):
-		print_str = ''
-		for v_offset in range(8):
-			start_index = v_offset*8
-			stop_index = start_index + 8
-			print_str = print_str + 'Row ' + str(v_offset) + ': ' + \
-				str(self.data[start_index:stop_index]) + '\n'
-		return print_str
-		
-	def generate_key(self):
-		return ''.join(map(str, self.data))
 		
 		
 class Bitmap:
@@ -113,7 +35,12 @@ class Bitmap:
 		elif struct.unpack('<H', self.raw_string[28:30])[0] != 24:
 			raise BMPException('Bitmap is incorrect bit depth (expected 24)!')
 			
-	def to_palette(self, init_palette_dict = None):
+	#A set of initial palette entries needs to be passed in to the bmp conversion
+	#The entries SHOULD be the same as the entries input to other later functions,
+	#but this is not required. Just keep in mind that if the required input
+	#palettes don't match between stages, they will be treated as two seperate
+	#palettes that can be chosen.
+	def to_palette_image(self, palette):
 		transformed_data = ''
 		
 		#Flip the BMP so rows are in order.
@@ -121,88 +48,28 @@ class Bitmap:
 			start_pixel = h * (self.width + self.padding) * 3
 			end_pixel = start_pixel + self.width*3
 			transformed_data =  transformed_data + self.data_string[start_pixel:end_pixel]
-			
-		extracted_palette = Palette(transformed_data, init_palette_dict, True)
+			b_channel = transformed_data[1::3]
+			r_channel = transformed_data[3::3]
+			transformed_data[1::3] = r_channel
+			transformed_data[3::3] = b_channel
 		
 		indexed_data = []
-		for entry in extracted_palette.next_entry(transformed_data, 3):
-			entry = entry[::-1]
-			indexed_data.append(extracted_palette.rgb_index[entry])
+		for str_pixel in self.iterate_str_pixels():
+			pass
+			#entry = palette.str2entry(str_pixel)
+			#indexed_data.append(palette.
+		#extracted_palette = Palette(transformed_data, init_palette_dict, True)
 		
-		return PaletteImage(indexed_data, extracted_palette, self.width, self.height)
+		#indexed_data = []
+		#for entry in extracted_palette.next_entry(transformed_data, 3):
+		#	entry = entry[::-1]
+		#	indexed_data.append(extracted_palette.rgb_index[entry])
 		
+		return PaletteImage(indexed_data, palette, self.width, self.height)
 		
-			
-class PaletteImage:
-	def __init__(self, Index, Palette, Width, Height):
-		self.palette_indices = Index
-		self.palette = Palette
-		self.width = Width
-		self.height = Height
-		
-	def __str__(self):
-		print_str = 'Palette: ' + str(self.palette) + '\nIndices:\n'
-		for h in range(self.height):
-			start_index = h*self.width
-			stop_index = start_index + self.width
-			print_str = print_str + 'Row ' + str(h) + \
-				': ' + str(self.palette_indices[start_index:stop_index]) + '\n'
-		return print_str
-		
-		
-class TileImage:
-	def __init__(self, palette_image, TileX, TileY):
-		self.width = palette_image.width
-		self.height = palette_image.height
-		self.palette = palette_image.palette
-		self.tile_xdim = TileX
-		self.tile_ydim = TileY
-		self.check_legal_dimensions()
-		
-		self.width_in_chars = self.width/self.tile_xdim
-		self.height_in_chars = self.height/self.tile_ydim
-		#self.pad_width = (self.round512(self.width)/8 - self.width_in_chars)
-		#self.pad_height = (self.round512(self.height)/8 - self.height_in_chars) #* \
-			#(self.width_in_chars + self.pad_width)
-			
-		self.tile_list = []
-		for h_char in range(0,self.height_in_chars):
-			for w_char in range(0,self.width_in_chars):
-				#print (w_char, h_char)
-				self.tile_list.append(Tile(palette_image.palette_indices, self.tile_xdim, \
-					self.tile_ydim, w_char, h_char, self.width))
-		#Bytes per row * rows per tile * extra tiles required to multiple of 512
-
-			#for pad_w in range(pad_width):
-			#	tile_list.append(NullVBTile)
-			#tile_data = tile_data + '\0'*2*8*pad_width
-		#tile_data = tile_data + '\0'*2*8*(self.pad_height)*(self.width_in_chars + self.pad_width)
-		
-	def __str__(self):
-		#Try to print the tiles as if were rendered for real.
-		#print len(self.tile_list)
-		print_str=''
-		for h_char in range(0,self.height_in_chars):
-			start_tile = h_char*self.width_in_chars
-			#print start_tile
-			for j in range(0, self.tile_ydim):
-				start_tile = h_char*self.width_in_chars
-				start_offset = j*self.tile_xdim
-				end_offset = start_offset + self.tile_xdim
-				for i in range(0, self.width_in_chars):
-					#if j == 0:
-					#	print_str = print_str + 'Tile (' + \
-					#		str(i) + ', ' + str(h_char) + '): '
-					print_str = print_str + \
-						str(self.tile_list[start_tile + i].data[start_offset:end_offset]) + ' '
-				print_str = print_str + '\n'
-			print_str = print_str + '\n'			
-		return print_str
-
-	def check_legal_dimensions(self):
-		if (self.height % self.tile_ydim) != 0 or (self.width % self.tile_xdim) != 0:
-			raise VBImageException('Image dimensions are not a multiple of the tile dimensions!')
-		
+	def iterate_str_pixels(self):
+		for pos in xrange(0, len(self.data_string), 3):
+			yield data[pos:pos + 3]
 		
 			
 def extract_data(f_str, pallete_dict = dict()):
