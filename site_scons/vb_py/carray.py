@@ -15,29 +15,44 @@ class ArrayWriter:
 		pass
 		
 	
-	def write(self, outname, data, arrayname, arraytype, elements_per_line):
-		struct_writer = struct.Struct('>' + str(elements_per_line) + ArrayWriter.structformat[arraytype])
-		elements_remainder = (len(data) / ArrayWriter.typesize[arraytype]) % elements_per_line
-		
+	def write(self, outname, data, arrayname, arraytype, elements_per_line, pad_to=None, pad_val=0):
 		outfp = open(outname, 'wb')
 		outfp.write("/*** Generated using the carray.py tool. ***/\n")
 		outfp.write("\n")
 		outfp.write("const " + arraytype + " " + arrayname + "[] = { \n") #'\\\n' ?
 		
-		format_specifier = '{0:#0' + str((ArrayWriter.typesize[arraytype] * 2) + 2) + 'x}, '
-		bytes_per_line = elements_per_line * ArrayWriter.typesize[arraytype]
 		
-		for bytes in self.read_n_bytes(data, elements_per_line * ArrayWriter.typesize[arraytype]):
-		#http://stackoverflow.com/questions/4440516/in-python-is-there-an-elegant-way-to-print-a-list-in-a-custom-format-without-ex
-			try:
-				curr_line = ''.join(format_specifier.format(k) \
-					for k in struct_writer.unpack(bytes)) + '\n' #'\\\n' ?
-			except:
-				last_data = struct.unpack('>' + str(elements_remainder) + \
-					ArrayWriter.structformat[arraytype], bytes)
-				curr_line = ''.join(format_specifier.format(k) \
-					for k in last_data)
-			outfp.write(curr_line)
+						
+		if pad_to:
+			#print 'padding'
+			pad_bytes = chr(pad_val) * ((pad_to * ArrayWriter.typesize[arraytype]) - len(data))
+			data = data + pad_bytes
+			#print len(data)
+		
+		elements_remainder = (len(data) / ArrayWriter.typesize[arraytype]) % elements_per_line
+		bytes_per_line = elements_per_line * ArrayWriter.typesize[arraytype]
+		format_specifier = '{0:#0' + str((ArrayWriter.typesize[arraytype] * 2) + 2) + 'x}, '
+		
+		if isinstance(data, str):
+			struct_writer = struct.Struct('>' + str(elements_per_line) + ArrayWriter.structformat[arraytype])
+			for bytes in self.read_n_bytes(data, elements_per_line * ArrayWriter.typesize[arraytype]):
+			#http://stackoverflow.com/questions/4440516/in-python-is-there-an-elegant-way-to-print-a-list-in-a-custom-format-without-ex
+				try:
+					curr_line = ''.join(format_specifier.format(k) \
+						for k in struct_writer.unpack(bytes)) + '\n' #'\\\n' ?
+				except:
+					last_data = struct.unpack('>' + str(elements_remainder) + \
+						ArrayWriter.structformat[arraytype], bytes)
+					curr_line = ''.join(format_specifier.format(k) \
+						for k in last_data)
+				outfp.write(curr_line)
+		else:
+			pass
+			#Not really working properly for now...
+			#for bytes in self.read_n_bytes(data, elements_per_line * ArrayWriter.typesize[arraytype]):
+			#	curr_line = ''.join(format_specifier.format(k) \
+			#		for k in bytes) + '\n' #'\\\n' ?
+			#	outfp.write(curr_line)
 		
 		outfp.seek(-3, 1) #Go back two spaces and remove the last comma.	
 		outfp.write(" \n};\n")
