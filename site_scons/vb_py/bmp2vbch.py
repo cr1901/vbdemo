@@ -8,7 +8,7 @@ import vbgfx
 import carray
 
 
-
+version = 0.9
 
 def bmp2vbch_scons(target, source, env):
 	pass
@@ -20,38 +20,21 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 		outchar_filename = os.path.splitext(outchar_filename_ext)[0]
 		outchar_filename = 'c' + outchar_filename
 	else:
-		outchar_path, outchar_filename = os.path.split(charfile)
+		outchar_path, outchar_filename_ext = os.path.split(charfile)
+		outchar_filename = os.path.splitext(outchar_filename_ext)[0]
 	
 	#global_palette_dict = ['\x00\x00\x00' : 0, '\x80\x00\x00' : 1, '\xC0\x00\x00' : 2, '\xFF\x00\x00' : 3}
 	
-	carray_writer = carray.ArrayWriter()
+	bmp2vbch_header = "\n/* <<<<<<<<<< Generated using the bmp2vbch.py tool, ver" + str(version) + " >>>>>>>>>> */\n\n"
+	
+	chararray_writer = carray.ArrayWriter(OffsetComments=True, Header = bmp2vbch_header)
+	bgarray_writer = carray.ArrayWriter(OffsetComments=True, OffsetInc = 8, Header = bmp2vbch_header)
 	global_palette = pt.PaletteTable('\x00\x00\x00\x80\x00\x00\xC0\x00\x00\xFF\x00\x00')
 	vb_scene = vbgfx.VBScene(global_palette)
-	#print global_palette[1]
-	#print global_palette.entry_table[1] == global_palette.entry_table[1]
-	#print hash((128, 0, 0))
-	#print hash(global_palette.entry_table[1])
-	
-	#my_dict = {}
-	#palent1 = bmpreader.PaletteEntry('\x00\x00\x00')
-	#palent2 = bmpreader.PaletteEntry('\x00\x00\x00')
-	#palent3 = bmpreader.PaletteEntry('\x80\x00\x00')
-	#print set([palent1]) <= set([palent2, palent3]) 
-	#my_dict[palent1] = 0
-	
-	#print my_dict[palent1]
-	#print my_dict[palent2]
-	#exit()
-	
-	
-	#pallete_indices = []
-	#char_dict = dict()
 	
 	bmp_list = []
 	palimg_list = []
 	tileimg_list = []
-	#tilemap = []
-	#all_tiles = ''
 	
 	for bmpfile in bmp_in:
 		bmp_list.append(bmpreader.Bitmap(bmpfile))
@@ -62,24 +45,15 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 	
 	for bmpimg in bmp_list:
 		palimg_list.append(bmpimg.to_palette_image(global_palette))
-	#print palimg_list[0]	
-	#exit()	
-	
+		
 	for palimg in palimg_list:
 		tileimg_list.append(pt.TileImage(palimg, 8, 8))
-		#print my_tile_image
-	
-	#print tileimg_list[0]
-	#print tileimg_list[0]
-	#exit()
-	
+		
 	#This section determines whether the supplied bitmaps and extracted chars
 	#meet conditions by the hardware. It also modifies the images in any
 	#manner deemend necessary.
 	for tileimg in tileimg_list:
 		vb_scene.add_image(tileimg)
-	
-	#exit()
 	
 	#tile_idx = 0
 	char_str = vb_scene.charstr_raw()
@@ -91,8 +65,8 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 			tile_idx = tile_idx + 1"""
 	
 	outchar_arrayname = charprefix + outchar_filename
-	char_outname = outchar_path + os.path.sep + outchar_filename + ".c"	
-	carray_writer.write(char_outname, char_str, outchar_arrayname, 'short', 8, 2048*8, 0)
+	char_outname = outchar_path + os.path.sep + outchar_filename_ext	
+	chararray_writer.write_file(char_outname, char_str, outchar_arrayname, 2048*8)
 	
 	for (bmpfile, index) in zip(bmp_in, range(0, len(vb_scene))):
 		bmp_path, bmp_filename_ext = os.path.split(bmpfile)
@@ -105,7 +79,7 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 		#	print struct.unpack('>H', char_dict[tile])
 		#	bgindex = bgindex + char_dict[tile]
 		bg_str = vb_scene.bg_raw(index)	
-		carray_writer.write(bmp_outname, bg_str, bmp_arrayname, 'short', 8)
+		bgarray_writer.write_file(bmp_outname, bg_str, bmp_arrayname)
 		
 		#bmpreader.extract_palettes_and_indices(f_str)
 		

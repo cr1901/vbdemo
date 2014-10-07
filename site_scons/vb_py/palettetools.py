@@ -163,9 +163,6 @@ class TileImage:
 		
 		self.width_in_chars = self.width/self.tile_xdim
 		self.height_in_chars = self.height/self.tile_ydim
-		#self.pad_width = (self.round512(self.width)/8 - self.width_in_chars)
-		#self.pad_height = (self.round512(self.height)/8 - self.height_in_chars) #* \
-			#(self.width_in_chars + self.pad_width)
 			
 		self.tile_list = []
 		for h_char in range(0,self.height_in_chars):
@@ -173,12 +170,6 @@ class TileImage:
 				#print (w_char, h_char)
 				self.tile_list.append(Tile(palette_image.indices, self.tile_xdim, \
 					self.tile_ydim, w_char, h_char, self.width))
-		#Bytes per row * rows per tile * extra tiles required to multiple of 512
-
-			#for pad_w in range(pad_width):
-			#	tile_list.append(NullVBTile)
-			#tile_data = tile_data + '\0'*2*8*pad_width
-		#tile_data = tile_data + '\0'*2*8*(self.pad_height)*(self.width_in_chars + self.pad_width)
 		
 	def __str__(self):
 		#Try to print the tiles as if were rendered for real.

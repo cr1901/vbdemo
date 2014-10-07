@@ -37,13 +37,7 @@ class VBBGEntry:
 		self.char_no = CharNo
 		self.str_struct = struct.Struct('>H')
 		
-	#def __str__(self):
-	#	return self.str_struct.pack(self.to_raw)
-		
 	def to_raw(self):
-		#print '{0:04X}'.format(self.char_no)
-		#print '{0:04X}'.format((self.palette_no << 14) + (int(self.hflip) << 13) + \
-		#	(int(self.vflip) << 12) + self.char_no)
 		return (self.palette_no << 14) + (int(self.hflip) << 13) + \
 			(int(self.vflip) << 12) + self.char_no
 
@@ -64,7 +58,7 @@ class VBTile(pt.Tile):
 			raw_stream.append(packed_short)
 		return raw_stream	
 			
-	def flip_raw(self):
+	def flip_raw(self, flip_tuple):
 		pass
 		
 	
@@ -193,24 +187,11 @@ class VBImage:
 		self.num_segments = (self.full_height/512 * self.full_width/512)
 		self.used_width_in_chars = self.used_width/8
 		self.used_height_in_chars = self.used_height/8
-		self.full_width_in_chars = self.full_width/8
-		self.full_height_in_chars = self.full_height/8
-		#self.pad_width = (self.round512(self.width)/8 - self.width_in_chars)
-		#self.pad_height = (self.round512(self.height)/8 - self.height_in_chars) #* \
-			#(self.width_in_chars + self.pad_width)
 			
 		self.check_legal_dimensions()
 		self.entry_list = ()
 		
-		#for 
-		
-		
 		#Convert the image so that it uses segments
-		"""for seg_y in range(0, self.used_height, 512):
-			for seg_x in range(0, self.used_width, 512):
-				for offset_y in range(0, 512, 8):
-					for offset_x in range(0, 512, 8):"""
-		
 		for seg_y in range(0, self.used_height_in_chars, 64):
 			for seg_x in range(0, self.used_width_in_chars, 64):
 				used_curr_segy = self.used_height_in_chars - seg_y
@@ -245,27 +226,6 @@ class VBImage:
 					for curr_column in range(0,64):
 						self.entry_list = self.entry_list + tuple([VBBGEntry()])
 						#print 'Zero Tile: ' + str((seg_x + curr_column, seg_y + offset_yu))
-						
-				#for 
-				
-		#		pass
-		#for h_char in range(0, self.used_height_in_chars):
-		#	for w_char in range(0, self.used_width_in_chars):
-		#		print (h_char, w_char)
-				#print tile_image.entry_list[w_char, h_char]
-				#pal_no = palette_tables.check_valid_palette(tile_image.entry_list[w_char, h_char])
-				
-				#entry_list.append(tile_image.entry_list[(width_in_chars + pad_width)*h_char + w_char])
-		#Bytes per row * rows per tile * extra tiles required to multiple of 512
-		
-		
-			#for pad_w in range(self.pad_width):
-			#	pass
-				#entry_list.append(VBBGEntry())
-		#	tile_data = tile_data + '\0'*2*8*pad_width
-		#tile_data = tile_data + [VBTile([0]*64)]*(self.pad_height)*(self.width_in_chars + self.pad_width)"""
-		
-		
 		
 			
 	def round512(self, number):
@@ -276,11 +236,6 @@ class VBImage:
 			raise VBImageException('Image dimensions are not a multiple of 8!')
 		if self.num_segments not in [1, 2, 4, 8]:
 			raise VBImageException('Image cannot be converted to a supported BG segment combination!')
-		#print 'Num segments: ' + str(self.num_segments)
-			
-		
-		
-	#def split_into_segments(self,
 	
 class VBScene:
 	def __init__(self, MasterPaletteTable, TileImageArray = None):
@@ -303,18 +258,6 @@ class VBScene:
 	def add_image(self, TileImage):
 		self.image_table.append(VBImage(TileImage, self.palette_tables, self.char_table))
 		self.num_bgs = self.num_bgs + 1
-		#for tile in TileImage.tile_list:
-		#	self.image_table
-		#	pal_no = self.palette_tables.check_valid_palette(tile)
-			#Check that palette is valid
-			
-			#if self.reverse_char_lookup.get(tile) is None:
-			#print struct.unpack('<8H', tile)
-				
-				#char_dict[tile] = struct.pack('>H', num_chars)
-				#num_chars = num_chars + 1
-	
-	#def raw_char
 		
 	def charstr_raw(self):
 		char_str = ''
@@ -332,13 +275,6 @@ class VBScene:
 			bg_str = bg_str + short_struct.pack(entry_raw)
 		return bg_str
 		
-	#def write_char_file(self, Filename, ArrayName):
-	#	carray_writer = carray.ArrayWriter()
-	#	pass
-	
-	#def write_bg_files(self, Filenames, ArrayNames):
-	#	pass
-	
 	#This will most likely be altered to account for various legal
 	#BG allocations (i.e. BGs which take 4 segments must be on a boundary of 4)
 	#but for now assume input is okay.
