@@ -23,11 +23,13 @@ vars.AddVariables( \
 
 #env = Environment(tools = ['as', 'cc', 'link'], variables = vars)
 if os.name == 'nt':
-	env = Environment(tools = ['mingw', tool_add_objcopy, tool_add_padROM, \
-		tool_add_flashROM, tool_add_buildassets], variables = vars)
+	env = Environment(tools = ['mingw',  tool_add_objcopy, tool_add_padROM, \
+		tool_add_flashROM, tool_add_movesource, tool_add_bmp2vbch, \
+		tool_add_vbch2C, tool_add_vbbg2C], variables = vars)
 else:
 	env = Environment(tools = ['gcc', tool_add_objcopy, tool_add_padROM, \
-		tool_add_flashROM, tool_add_buildassets], variables = vars)
+		tool_add_flashROM, tool_add_movesource, tool_add_bmp2vbch, \
+		tool_add_vbch2C, tool_add_vbbg2C], variables = vars)
 
 vars.Save('variables.cache', env)
 Help(vars.GenerateHelpText(env))

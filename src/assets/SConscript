@@ -5,19 +5,46 @@ print "Converting binary assets into C/ASM..." #Fix so printed at right time...
 #Look for the assets in the top-level assets directory! I may remove this
 env.VariantDir(Dir('.'), '#/assets', duplicate=False)
 
-gfx_assets_orig = Glob('graphics/[!g]*.c') #The 'g' prefix indicates GENERATED C files.
+#Figure out how to handle assets already provided in C. May need to be moved
+#to separate directory... or divide assets by file type!
+#gfx_assets_c = Glob('graphics/[!g]*.c') #The 'g' prefix indicates GENERATED C files.
 #gfx_assets_orig = Glob('graphics/[!g]*.*[!~]') #Note that some of the original assets
 #ARE in C- not ALL assets need to be run through a conversion!
-music_assets_orig = Glob('music/[!g]*.c')
+#music_assets_c = Glob('music/[!g]*.c')
 
-orig_assets = gfx_assets_orig + music_assets_orig
-generated_assets = env.BuildAssets(orig_assets)
+#c_assets = gfx_assets_c + music_assets_c
+#moved_c_assets = env.MoveSource(c_assets)
+
+existing_c_char_files = [File('graphics/font_pc.c'), File('graphics/cross.c')]
+
+bmp_assets = Glob('graphics/[!g]*.bmp')
+#pcfont_char_file = env.BMP2VBch('graphics/font_pc', 'graphics/vblogo.bmp')
+vblogo_char_file = env.BMP2VBch('graphics/cfoc', 'graphics/vblogo.bmp')
+vblogo_bg_files = create_SideEffect_names(vblogo_char_file, [File('graphics/vblogo.bmp')], suffix='.c')
+env.SideEffect(vblogo_bg_files, vblogo_char_file)
+
+all_assets = existing_c_char_files + vblogo_char_file + vblogo_bg_files
+
+#generated_assets = env.BuildAssets(orig_assets)
 
 if 'assets' in COMMAND_LINE_TARGETS:
 	print "If -c specified, will clean files generated from assets."
-	#env.Clean(generated_assets, [generated_assets])
+	#env.Clean(all_assets, [all_assets]) #Clean generated C asset files.
+	
+	#SCons APPEARS to be smart enough to know to only clean the generated
+	#C files (presumably by knowing that the pre-existing C assets are
+	#not the output of another file).
+	
+	#This is actually redundant- only the bg_files need to actually be
+	#added to the targets to clean, because side-effects are not cleaned
+	#by default. EDIT: It appears they are, contray to the SCons wiki:
+	#http://www.scons.org/wiki/SConsMethods/SideEffect
+	#Commenting out.
 else:
-	env.NoClean([generated_assets]) #Don't clean the final library output/object files.
+	env.NoClean([all_assets]) #Don't clean the generated C asset files.
+	#All object files will get cleaned (can fix this later). Redundant to
+	#include existing_c_char_files (see above comment), but I wonder if 
+	#NoClean internally ignores it anyway... 
 
-Return('generated_assets')
+Return('all_assets')
 

@@ -10,10 +10,7 @@ import carray
 
 version = 0.9
 
-def bmp2vbch_scons(target, source, env):
-	pass
-
-def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix="char_"):
+def bmp2vbch_cmd(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix="char_"):
 	if charfile is None:
 		print "No output character file specified. Array/Output name derive name from {0}".format(args[0])
 		outchar_path, outchar_filename_ext = os.path.split(args[0])
@@ -22,7 +19,7 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 	else:
 		outchar_path, outchar_filename_ext = os.path.split(charfile)
 		outchar_filename = os.path.splitext(outchar_filename_ext)[0]
-	
+	#print bmp_in
 	#global_palette_dict = ['\x00\x00\x00' : 0, '\x80\x00\x00' : 1, '\xC0\x00\x00' : 2, '\xFF\x00\x00' : 3}
 	
 	bmp2vbch_header = "\n/* <<<<<<<<<< Generated using the bmp2vbch.py tool, ver" + str(version) + " >>>>>>>>>> */\n\n"
@@ -72,7 +69,11 @@ def bmp2vbch(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix=
 		bmp_path, bmp_filename_ext = os.path.split(bmpfile)
 		bmp_filename = os.path.splitext(bmp_filename_ext)[0]
 		bmp_arrayname = bgprefix + bmp_filename
-		bmp_outname = bmp_path + os.path.sep + bmp_filename + ".c"
+		#bmp_outname = bmp_path + os.path.sep + bmp_filename + ".c"
+		
+		#BMP C file side effects are output into the same directory as
+		#the char file.
+		bmp_outname = os.path.join(outchar_path, bmp_filename + ".c")
 		
 		#bgindex = ''
 		#for tile in bmpreader.read_n_bytes(bgmap, 16):
@@ -102,6 +103,8 @@ if __name__ == '__main__':
 		dest="bgprefix", help="Array prefix for background files", default="bg_")
 	parser.add_option("-c", None, action="store",  type="string", \
 		dest="charprefix", help="Array prefix for character file.", default="char_")
+	#parser.add_option("-p", None, action="store",  type="string", \
+	#	dest="outprefix", help="File name prefix for output background files (not prepended to array names).", default="")
 	#Header option?
 	parser.add_option("-x", None, action="store_true", dest="compress", \
 		 help="Compress character maps and BGs (default: %default)", default=True)
@@ -113,4 +116,4 @@ if __name__ == '__main__':
 		print "No input files specified. Aborting."
 		exit(-2)
 		
-	bmp2vbch(args, options.charfile, options.compress, options.bgprefix, options.charprefix)
+	bmp2vbch_cmd(args, options.charfile, options.compress, options.bgprefix, options.charprefix)
