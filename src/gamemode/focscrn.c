@@ -100,10 +100,10 @@ void load_ipdfoc_scr()
 	Screen. */
 	WA[31].head = WRLD_ON;
 	WA[31].gx = 0;
-	WA[31].gp = 1;
+	WA[31].gp = 0;
 	WA[31].gy = 0;
 	WA[31].mx = 0;
-	WA[31].mp = 1;
+	WA[31].mp = 0;
 	WA[31].my = 0;
 	WA[31].w = 383;
 	WA[31].h = 223;
