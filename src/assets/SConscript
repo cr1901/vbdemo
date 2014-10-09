@@ -19,8 +19,8 @@ existing_c_char_files = [File('graphics/font_pc.c'), File('graphics/cross.c')]
 
 bmp_assets = Glob('graphics/[!g]*.bmp')
 #pcfont_char_file = env.BMP2VBch('graphics/font_pc', 'graphics/vblogo.bmp')
-vblogo_char_file = env.BMP2VBch('graphics/cfoc', 'graphics/vblogo.bmp')
-vblogo_bg_files = create_SideEffect_names(vblogo_char_file, [File('graphics/vblogo.bmp')], suffix='.c')
+vblogo_char_file = env.BMP2VBch('graphics/cfoc', ['graphics/vblogo_r.bmp', 'graphics/vblogo_l.bmp'])
+vblogo_bg_files = create_SideEffect_names(vblogo_char_file, [File('graphics/vblogo_r.bmp'), File('graphics/vblogo_l.bmp')], suffix='.c')
 env.SideEffect(vblogo_bg_files, vblogo_char_file)
 
 all_assets = existing_c_char_files + vblogo_char_file + vblogo_bg_files

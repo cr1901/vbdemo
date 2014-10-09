@@ -94,13 +94,14 @@ void load_ipdfoc_scr()
 	/* copymem((void *)0x78000, (void*)cgx_sample, 8192*2);
 	copymem((void*)BGMap(0), (void*)scr_ipd_foc, 4096*2); */
 	copymem((void *)0x78000, (void*)char_cfoc, 8192*2);
-	copymem((void*)BGMap(0), (void*)bg_vblogo, 4096*2);
+	copymem((void*)BGMap(0), (void*)bg_vblogo_r, 4096*2);
+	copymem((void*)BGMap(1), (void*)bg_vblogo_l, 4096*2);
 	
 	/* Reload the worlds to point to the appropriate.
 	Screen. */
-	WA[31].head = WRLD_ON;
+	WA[31].head = WRLD_RON;
 	WA[31].gx = 0;
-	WA[31].gp = 0;
+	WA[31].gp = 1;
 	WA[31].gy = 0;
 	WA[31].mx = 0;
 	WA[31].mp = 0;
@@ -110,9 +111,9 @@ void load_ipdfoc_scr()
 	WA[31].ovr = 0;
 	WA[31].param = 0;
 	
-	/* WA[30].head = WRLD_RON;
+	WA[30].head = WRLD_LON + 1;
 	WA[30].gx    = 0;
-	WA[30].gp    = 0; //No parallax for now.
+	WA[30].gp    = 1; //No parallax for now.
 	WA[30].gy    = 0;
 	WA[30].mx = 0;
 	WA[30].mp = 0;
@@ -120,9 +121,9 @@ void load_ipdfoc_scr()
 	WA[30].w = 383;
 	WA[30].h = 223;
 	WA[30].ovr = 0;
-	WA[30].param = 0; */
+	WA[30].param = 0;
 	
-	WA[30].head = WRLD_END;
+	WA[29].head = WRLD_END;
 	
 }
 
