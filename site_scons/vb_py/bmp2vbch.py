@@ -81,21 +81,6 @@ def bmp2vbch_cmd(bmp_in, charfile = None, compress=True, bgprefix="bg_", charpre
 		#	bgindex = bgindex + char_dict[tile]
 		bg_str = vb_scene.bg_raw(index)	
 		bgarray_writer.write_file(bmp_outname, bg_str, bmp_arrayname)
-		
-		#bmpreader.extract_palettes_and_indices(f_str)
-		
-		#write_array_short(bmp_outname, bmp_arrayname, f_str)
-		
-	#print "Creating char array " + charprefix + outchar_filename + " at " + outchar_path + os.path.sep + outchar_filename + ".c"
-		
-	
-"""def extract_palettes_and_indices(bmp_stream):	
-	pass
-
-#http://stackoverflow.com/questions/3753589/packing-and-unpacking-variable-length-array-string-using-the-struct-module-in-py
-def unpack_helper(fmt, data):
-	size = struct.calcsize(fmt)
-	return struct.unpack(fmt, data[:size])"""
 	
 if __name__ == '__main__':
 	parser = optparse.OptionParser(usage="Usage: %prog [options] bmp1 [bmp2 ...]")

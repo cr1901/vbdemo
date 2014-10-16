@@ -80,12 +80,7 @@ class VBPaletteTables:
 		#has a correct palette. All the indices within a tile should
 		#belong within one set.
 		self.palette_sets = [set([s, s + 1, s + 2, s + 3]) for s in range(0,32,4)]
-		#for s in range(0,32,4):
-		#	self.palette_sets.append(set(self.entry_table[))
 		
-		#self.palette_sets = set(x) for 
-		#self.num_palettes = 0
-		#self.index = dict() #Do we need this?
 		self.vb_index = [e % 4 for e in range(0,32)]
 		self.value = []
 		

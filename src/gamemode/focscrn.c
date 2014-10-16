@@ -101,7 +101,7 @@ void load_ipdfoc_scr()
 	Screen. */
 	WA[31].head = WRLD_RON;
 	WA[31].gx = 0;
-	WA[31].gp = 1;
+	WA[31].gp = 0;
 	WA[31].gy = 0;
 	WA[31].mx = 0;
 	WA[31].mp = 0;
@@ -113,7 +113,7 @@ void load_ipdfoc_scr()
 	
 	WA[30].head = WRLD_LON + 1;
 	WA[30].gx    = 0;
-	WA[30].gp    = 1; //No parallax for now.
+	WA[30].gp    = 0; //No parallax for now.
 	WA[30].gy    = 0;
 	WA[30].mx = 0;
 	WA[30].mp = 0;

@@ -43,16 +43,10 @@ class Bitmap:
 		for h in reversed(range(self.height)):
 			start_pixel = h * (self.width + self.padding) * 3
 			end_pixel = start_pixel + self.width*3
-			#row_reversed_data = row_reversed_data + self.data_string[start_pixel:end_pixel]
 			row_len = len(self.data_string[start_pixel:end_pixel])
-			#transformed_data = ''.join((i for j in zip(r_channel, g_channel, b_channel) for i in j))
-		
-		
-			#for str_pixel in self.iterate_str_pixels(row_data):
+
 			for pos in range(0, row_len, 3):
-				#pass
 				str_pixel = self.data_string[start_pixel+pos:start_pixel+pos+3]
-				#entry = 0
 				#Faster than creating a palette entry each time, and using
 				#that hash. The hash fcn is mainly provided for conveniene.
 				entry = palette.index[tuple_struct.unpack(str_pixel[::-1])]
