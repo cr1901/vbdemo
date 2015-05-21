@@ -43,7 +43,8 @@ void focus_screen_mainproc()
 	
 	/* Failure of this function is grounds for halting the program! */
 	wait_timer = request_timer(200, set_true, &two_seconds_passed);
-	while(!(two_seconds_passed && vbPadKeyDown()));
+	//while(!(two_seconds_passed && vbPadKeyDown()));
+	fade_and_wait();
 	vbDisplayHide();
 	remove_timer(wait_timer);
 	
@@ -51,11 +52,12 @@ void focus_screen_mainproc()
 	fade_and_wait();
 	//vbDisplayOn();
 	
+	//curr_game_
 	//vbPadKeyDown();
 	//while(vbPadKeyDown() != K_BTNS);
 	
-	jump_to_reset();
-	
+	/* jump_to_reset(); */
+	/* return TRI_DEMO; */
 	
 	
 }

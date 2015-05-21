@@ -14,12 +14,14 @@ void init_vb()
 	/* init_sound_driver(); */
 	curr_game_state = SETUP; /* Really inelegant, but it'll do for now. */
 	initial_game_mode = FOCUS_SCREEN;
+	INT_ENABLE;
 	init_just_occurred = 1;	
 }
 
 void inline jump_to_reset()
 {
 	INT_DISABLE;
+	VIP_REGS[INTENB] = 0;
 	stop_timer_driver();
 	jump_addr((void *) 0xFFFFFFF0);
 }

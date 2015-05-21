@@ -18,9 +18,12 @@ void main_loop()
 		
 		/* Mode-change dependent processing (call mode setup routine) or 
 		Run mode mainproc. */
+		/* mode_main_jump_table[curr_game_mode](); */
 		
 		/* Each mode should have at least 3 main files: mainproc, setup, 
 		and interrupt processing. */
-		mode_main_jump_table[curr_game_mode]();
+		//mode_main_jump_table[FOCUS_SCREEN]();
+		mode_main_jump_table[TRI_DEMO]();
+		
 	}
 }
