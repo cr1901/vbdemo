@@ -87,5 +87,5 @@ class ArrayWriter:
 		
 	#http://stackoverflow.com/questions/434287/what-is-the-most-pythonic-way-to-iterate-over-a-list-in-chunks
 	def read_n_bytes(self, data, n_bytes):
-		for pos in xrange(0, len(data), n_bytes):
+		for pos in range(0, len(data), n_bytes):
 			yield data[pos:pos + n_bytes]

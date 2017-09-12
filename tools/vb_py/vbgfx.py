@@ -1,9 +1,9 @@
 import warnings
 
-import bmpreader
-import carray
+from . import bmpreader
+from . import carray
 import struct
-import palettetools as pt
+from . import palettetools as pt
 
 class VBTileException(Exception):
 	def __init__(self, msg):
@@ -95,7 +95,7 @@ class VBPaletteTables:
 		print_str = ''
 		print_str += self.palette_sets
 		for index, entry in enumerate(self.value):
-			print len(entry)
+			print(len(entry))
 			print_str = print_str + str(index) + ': ' + str(struct.unpack('B', entry)) + ', '
 		return print_str
 	

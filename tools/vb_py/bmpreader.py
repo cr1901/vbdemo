@@ -2,7 +2,7 @@ import struct
 import string
 import math
 
-import palettetools as pt
+from . import palettetools as pt
 
 class BMPException(Exception):
 	def __init__(self, msg):
@@ -40,7 +40,7 @@ class Bitmap:
 		tuple_struct = struct.Struct('3B')
 		
 		#Flip the BMP so rows are in order.
-		for h in reversed(range(self.height)):
+		for h in reversed(list(range(self.height))):
 			start_pixel = h * (self.width + self.padding) * 3
 			end_pixel = start_pixel + self.width*3
 			row_len = len(self.data_string[start_pixel:end_pixel])

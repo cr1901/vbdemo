@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 import optparse
 import os.path
@@ -12,7 +12,7 @@ version = 0.9
 
 def bmp2vbch_cmd(bmp_in, charfile = None, compress=True, bgprefix="bg_", charprefix="char_"):
 	if charfile is None:
-		print "No output character file specified. Array/Output name derive name from {0}".format(args[0])
+		print("No output character file specified. Array/Output name derive name from {0}".format(args[0]))
 		outchar_path, outchar_filename_ext = os.path.split(args[0])
 		outchar_filename = os.path.splitext(outchar_filename_ext)[0]
 		outchar_filename = 'c' + outchar_filename
@@ -65,7 +65,7 @@ def bmp2vbch_cmd(bmp_in, charfile = None, compress=True, bgprefix="bg_", charpre
 	char_outname = os.path.join(outchar_path, outchar_filename_ext)
 	chararray_writer.write_file(char_outname, char_str, outchar_arrayname, 2048*8)
 
-	for (bmpfile, index) in zip(bmp_in, range(0, len(vb_scene))):
+	for (bmpfile, index) in zip(bmp_in, list(range(0, len(vb_scene)))):
 		bmp_path, bmp_filename_ext = os.path.split(bmpfile)
 		bmp_filename = os.path.splitext(bmp_filename_ext)[0]
 		bmp_arrayname = bgprefix + bmp_filename
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 	(options, args) = parser.parse_args()
 
 	if not args:
-		print "No input files specified. Aborting."
+		print("No input files specified. Aborting.")
 		exit(-2)
 
 	bmp2vbch_cmd(args, options.charfile, options.compress, options.bgprefix, options.charprefix)
