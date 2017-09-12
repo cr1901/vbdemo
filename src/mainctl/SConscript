@@ -1,2 +1,0 @@
-mainctl_src = Glob('*.c')
-Return('mainctl_src')

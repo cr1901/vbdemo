@@ -1,5 +1,5 @@
 #include "backend/viddriv.h"
-#include "libgccvb/libgccvb.h"
+#include <libgccvb.h>
 
 void setup_initial_vip()
 {

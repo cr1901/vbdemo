@@ -1,7 +1,7 @@
 #ifndef TIMEDRIV_H
 #define TIMEDRIV_H
 
-#include "libgccvb/libgccvb.h"
+#include <libgccvb.h>
 
 
 #define MAX_NUM_TIMERS 32
@@ -14,7 +14,7 @@ typedef struct timer_observer
 
 /* typedef struct timer_subject
 {
-		
+
 }TIMER_SUBJECT; */
 
 typedef struct comparator
@@ -48,4 +48,3 @@ extern unsigned long tim_vector; /* Embedded in libgccvb's runtime. */
 
 
 #endif        /*  #ifndef TIMEDRIV_H  */
-

@@ -1,2 +1,0 @@
-gamemode_src = Glob('*.c')
-Return('gamemode_src')

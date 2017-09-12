@@ -1,2 +1,0 @@
-video_src = Glob('*.c')
-Return('video_src')

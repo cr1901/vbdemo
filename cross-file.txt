@@ -1,0 +1,13 @@
+[binaries]
+c = 'v810-gcc'
+ar = 'v810-ar'
+strip = 'v810-strip'
+
+[host_machine]
+system = 'virtual-boy'
+cpu = 'v810'
+cpu_family = 'v810'
+endian = 'little'
+
+[properties]
+c_args = ['-Wall', '-nodefaultlibs', '-mv810', '-xc']

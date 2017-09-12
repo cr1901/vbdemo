@@ -1,11 +1,11 @@
-#include "libgccvb/libgccvb.h"
+#include <libgccvb.h>
 
 #include "backend/timedriv.h"
 
 //static unsigned long in_use_index;
 static COMPARATOR timer_array[MAX_NUM_TIMERS];
 
-/* static int precise_timer_on; 
+/* static int precise_timer_on;
 unsigned char precise_timer_int_cnt = 0; */
 
 static void timer_handler();
@@ -20,14 +20,14 @@ static void timer_handler()
 	//{
 	//precise_timer_int_cnt++;
 	//}
-	
+
 	run_inuse_comparators();
-	
+
 	/* Run one frame of sound driver here. */
-	
-	/* Run other observers if necessary? Or keep in 
+
+	/* Run other observers if necessary? Or keep in
 	run_inuse_comparators()? */
-	
+
 	/* VB manual recommends this. */
 	HW_REGS[TCR] &= ~TIMER_INT;
 	HW_REGS[TCR] |= TIMER_ZCLR;
@@ -54,7 +54,7 @@ static void run_inuse_comparators()
 			if(timer_array[count].ticks_elapsed > timer_array[count].ticks_target)
 			{
 				timer_array[count].ticks_elapsed = 0;
-				
+
 				/* If the desired time has elapsed, modify the target
 				data using the callback. */
 				timer_array[count].notifier.notify_fcn( \
@@ -70,12 +70,12 @@ static int find_free_comparator()
 {
 	register int count = 0;
 	/* We need to find a timer that is not currently in use. */
-	
+
 	while(count < MAX_NUM_TIMERS && timer_array[count++].in_use)
 	{
 		/* That's the whole loop :D. */
 	}
-	
+
 	return (count < MAX_NUM_TIMERS) ? count : -1;
 }
 
@@ -85,7 +85,7 @@ after all data is set up. */
 int set_timer_to_inuse(unsigned short target_ticks, void (* callback)(volatile void *), volatile void * data)
 {
 	int index;
-	
+
 	/* We need to find a timer that is not currently in use. */
 	if((index = find_free_comparator()) >= 0)
 	{
@@ -95,14 +95,14 @@ int set_timer_to_inuse(unsigned short target_ticks, void (* callback)(volatile v
 		timer_array[index].notifier.notify_fcn = callback;
 		timer_array[index].in_use = 1;
 	}
-	
+
 	return index;
 }
 
 void unset_timer_from_inuse(int index)
 {
 	timer_array[index].in_use = 0;
-	
+
 }
 
 /* Required because the interrupt vectors for VB are embedded into the
@@ -116,7 +116,7 @@ void bind_tim_vector()
 void init_timer_hw()
 {
 	clear_comparators(); /* Makes sure nothing is in use. */
-	
+
 	/* Timer interrupt will fire once every 10ms. */
 	HW_REGS[THR] = 0; /* Initial timer counter is 0xFFFF. However, the
 	hardware will reload the timer with 0x0000 during the next tick.
