@@ -13,7 +13,7 @@ void init_vb()
 	init_timer_driver();
 	/* init_sound_driver(); */
 	curr_game_state = SETUP; /* Really inelegant, but it'll do for now. */
-	initial_game_mode = FOCUS_SCREEN;
+	initial_game_mode = INITIAL_GAME_MODE;
 	INT_ENABLE;
 	init_just_occurred = 1;
 }

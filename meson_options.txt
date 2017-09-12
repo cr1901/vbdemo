@@ -1,0 +1,4 @@
+option('retroarch_core', type : 'string', value : 'mednafen_vb_libretro', description : 'RetroArch core to use for testing.')
+option('start_mode', type : 'combo', choices : ['FOCUS_SCREEN',
+    'TRI_DEMO', 'AFFINE_DEMO'],
+    value : 'FOCUS_SCREEN', description : 'Start game mode to use (for testing).')
